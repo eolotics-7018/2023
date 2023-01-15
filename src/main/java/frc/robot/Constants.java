@@ -21,6 +21,6 @@ public final class Constants {
    public final static int kPMRR = 3;
    //constantes de  la banda 
    public final static int kPBelt = 0;
-
+   public final static int kPNeo = 1;
   }
 }

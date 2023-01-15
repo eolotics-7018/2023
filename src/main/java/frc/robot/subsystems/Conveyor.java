@@ -12,14 +12,16 @@ import frc.robot.Constants;
 public class Conveyor extends SubsystemBase {
   /** Creates a new Conveyor. */
   private final Spark mBelt = new Spark(Constants.OperatorConstants.kPBelt);
+  private final Spark mNEO = new Spark(Constants.OperatorConstants.kPNeo);
   public Conveyor() {}
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
-  public void beltMove(double beltSpeed){
-    mBelt.set(beltSpeed);
+  public void beltMove(double speed){
+    mBelt.set(speed);
+    mNEO.set(speed);
   }
 
 }
