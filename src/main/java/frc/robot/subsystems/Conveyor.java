@@ -5,14 +5,15 @@
 package frc.robot.subsystems;
 
 
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Conveyor extends SubsystemBase {
   /** Creates a new Conveyor. */
-  private final Spark mBelt = new Spark(Constants.OperatorConstants.kPBelt);
-  private final Spark mNEO = new Spark(Constants.OperatorConstants.kPNeo);
+  private final CANSparkMax mBelt = new CANSparkMax(Constants.OperatorConstants.kPBelt, MotorType.kBrushless);
+  private final CANSparkMax mNEOCan = new CANSparkMax(Constants.OperatorConstants.kPNeo, MotorType.kBrushless);
   public Conveyor() {}
 
   @Override
@@ -21,7 +22,7 @@ public class Conveyor extends SubsystemBase {
   }
   public void beltMove(double speed){
     mBelt.set(speed);
-    mNEO.set(speed);
+    mNEOCan.set(speed);
   }
 
 }
