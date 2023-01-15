@@ -54,7 +54,7 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
 
-    mStick.rightTrigger().onTrue(new RunCommand(()->s_Conveyor.beltMove(mStick.getRightTriggerAxis()), s_Conveyor));
+    mStick.rightTrigger().whileTrue(new RunCommand(()->s_Conveyor.beltMove(mStick.getRightTriggerAxis()), s_Conveyor));
     mStick.leftTrigger().whileTrue(new RunCommand(()->s_Conveyor.beltMove(-mStick.getLeftTriggerAxis()), s_Conveyor));
     
   }

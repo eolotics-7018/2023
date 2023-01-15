@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,18 +11,18 @@ import frc.robot.Constants;
 
 public class Conveyor extends SubsystemBase {
   /** Creates a new Conveyor. */
-  private final CANSparkMax mBelt = new CANSparkMax(Constants.OperatorConstants.kPBelt, MotorType.kBrushless);
-  private final CANSparkMax mNEOCan = new CANSparkMax(Constants.OperatorConstants.kPNeo, MotorType.kBrushless);
+  private final CANSparkMax mBelt = new CANSparkMax(Constants.OperatorConstants.kPBelt,MotorType.kBrushless);
+  // private final Spark mNEOCan = new Spark(Constants.OperatorConstants.kPNeo);
   public Conveyor() {}
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
-  
+
   public void beltMove(double speed){
     mBelt.set(speed);
-    mNEOCan.set(speed);
+    // mNEOCan.set(speed);
   }
 
 }
