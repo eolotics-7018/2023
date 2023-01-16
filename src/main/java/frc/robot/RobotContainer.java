@@ -10,6 +10,7 @@ import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Train;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -17,12 +18,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 //Pertenecí 4 años a la competencia 
 //Todos me la pelaban 
 //Recuerden mi código y recuerdenme a mi 
-//Si están leyendo esto eres puto
-//sisisisisisisisisi
-//nonononononononono
-//aquí estamos en tiempo de prueba de github sisisisisi 
-//el medio metro paso de la chaquetita
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -64,9 +59,10 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
 
-    mStick.rightTrigger().whileTrue(new RunCommand(()->s_Conveyor.beltMove(mStick.getRightTriggerAxis()), s_Conveyor));
-    mStick.leftTrigger().whileTrue(new RunCommand(()->s_Conveyor.beltMove(-mStick.getLeftTriggerAxis()), s_Conveyor));
-    
+    mStick.rightTrigger().whileTrue(new RunCommand(()-> s_Conveyor.beltMove(mStick.getRightTriggerAxis()), s_Conveyor));
+    mStick.leftTrigger().whileTrue(new RunCommand(()-> s_Conveyor.beltMove(-mStick.getLeftTriggerAxis()), s_Conveyor));
+    mStick.povRight().onTrue(new InstantCommand(()-> s_Conveyor.faster(), s_Conveyor));
+    mStick.povLeft().onTrue(new InstantCommand(()-> s_Conveyor.slower(), s_Conveyor));
   }
   
   /**
