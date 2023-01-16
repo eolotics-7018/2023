@@ -16,8 +16,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 //Recuerdo de Juan Jimenez Pineda
 //Pertenecí 4 años a la competencia 
-//Todos me la pelaban 
+//Todos me la pelaban menos Edy
 //Recuerden mi código y recuerdenme a mi 
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
