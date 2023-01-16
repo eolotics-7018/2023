@@ -4,7 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.interfaces.Accelerometer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -28,7 +32,9 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
   }
-
+  
+  double prevXAccel = 0, prevYAccel = 0;
+  Accelerometer accelerometer = new BuiltInAccelerometer();
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
    * that you want ran during disabled, autonomous, teleoperated and test.
@@ -38,12 +44,27 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    CameraServer.startAutomaticCapture();
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
-    CommandScheduler.getInstance().run();
 
+    double xAccel = accelerometer.getX();
+    double yAccel = accelerometer.getY();
+
+    // Calculates the jerk in the X and Y directions
+    // Divides by .02 because default loop timing is 20ms
+    double xJerk = (xAccel - prevXAccel)/.02;
+    double yJerk = (yAccel - prevYAccel)/.02;
+
+    prevXAccel = xAccel;
+    prevYAccel = yAccel;
+
+    SmartDashboard.putNumber("xJerk", xJerk);
+    SmartDashboard.putNumber("yJerk", yJerk);
+
+    CommandScheduler.getInstance().run();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
