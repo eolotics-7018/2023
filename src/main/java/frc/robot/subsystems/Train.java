@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -20,6 +21,7 @@ public class Train extends SubsystemBase {
   private final MotorControllerGroup mLeft = new  MotorControllerGroup(MLF, MLR) ;
   private final MotorControllerGroup mRight = new MotorControllerGroup(MRF, MRR);
   public DifferentialDrive mDrive = new DifferentialDrive(mLeft, mRight);
+  private VictorSPX nose = new VictorSPX(9);
   public Train() {}
 
   @Override
