@@ -16,22 +16,13 @@ public class Conveyor extends SubsystemBase {
   private final CANSparkMax mBelt = new CANSparkMax(Constants.OperatorConstants.kPBelt,MotorType.kBrushless);
   private final CANSparkMax mNEOCan = new CANSparkMax(Constants.OperatorConstants.kPNeo,MotorType.kBrushless);
   // private SparkMaxPIDController pid_controller = mBelt.getPIDController();
-  private RelativeEncoder mRelativeEncoder;
-  private double motorSpeedProportion = 1;;
-  // public static double kP, kI , kD, kIz, kFF, kMaxOutput, kMinOutput;
+  private RelativeEncoder encoder;
+  private double motorSpeedProportion = 1;
 
   public Conveyor() {
     mBelt.restoreFactoryDefaults();
     mNEOCan.follow(mBelt);
-    mRelativeEncoder = mBelt.getEncoder();
-  }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Encoder position: ", mRelativeEncoder.getPosition());
-    SmartDashboard.putNumber("Encoder velocity: ", mRelativeEncoder.getVelocity());
-    SmartDashboard.putNumber("Output Percentage", motorSpeedProportion);
+    encoder = mBelt.getEncoder();
   }
 
   public void beltMove(double speed){
@@ -48,6 +39,18 @@ public class Conveyor extends SubsystemBase {
     if (motorSpeedProportion > 0) {
       motorSpeedProportion -= 0.05;
     }
+  }
+
+  public RelativeEncoder getEncoder() {
+    return encoder;
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Encoder position: ", encoder.getPosition());
+    SmartDashboard.putNumber("Encoder velocity: ", encoder.getVelocity());
+    SmartDashboard.putNumber("Output Percentage", motorSpeedProportion);
   }
 
 }
