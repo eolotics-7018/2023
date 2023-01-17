@@ -14,14 +14,14 @@ import frc.robot.Constants;
 public class Conveyor extends SubsystemBase {
   /** Creates a new Conveyor. */
   private final CANSparkMax mBelt = new CANSparkMax(Constants.OperatorConstants.kPBelt,MotorType.kBrushless);
-  private final CANSparkMax mNEOCan = new CANSparkMax(Constants.OperatorConstants.kPNeo,MotorType.kBrushless);
+
   // private SparkMaxPIDController pid_controller = mBelt.getPIDController();
   private RelativeEncoder encoder;
   private double motorSpeedProportion = 1;
 
   public Conveyor() {
     mBelt.restoreFactoryDefaults();
-    mNEOCan.follow(mBelt);
+  
     encoder = mBelt.getEncoder();
   }
 
