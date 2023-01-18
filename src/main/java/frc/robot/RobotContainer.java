@@ -10,6 +10,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Train;
+import frc.robot.subsystems.Wing;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -33,6 +34,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Train s_DriveTrain = new Train();
   private final Conveyor s_Conveyor = new Conveyor();
+  private final Wing s_Wing = new Wing();
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -41,6 +43,7 @@ public class RobotContainer {
     
     // s_DriveTrain.setDefaultCommand(new RunCommand(()->s_DriveTrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_DriveTrain));
     s_Conveyor.setDefaultCommand(new RunCommand(()->s_Conveyor.beltMove(0.0), s_Conveyor));
+    s_Wing.setDefaultCommand(new RunCommand(()->s_Wing.pistonMove(0.0), s_Wing));
     s_DriveTrain.setDefaultCommand(new RunCommand(()-> s_DriveTrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_DriveTrain));
   }
 
@@ -63,6 +66,8 @@ public class RobotContainer {
 
     mStick.rightTrigger().whileTrue(new RunCommand(()-> s_Conveyor.beltMove(mStick.getRightTriggerAxis()), s_Conveyor));
     mStick.leftTrigger().whileTrue(new RunCommand(()-> s_Conveyor.beltMove(-mStick.getLeftTriggerAxis()), s_Conveyor));
+    mStick.a().whileTrue(new RunCommand(()->s_Wing.pistonMove(1.0), s_Wing));
+    mStick.b().whileTrue(new RunCommand(()->s_Wing.pistonMove(-1.0), s_Wing));
     mStick.povRight().onTrue(new InstantCommand(()-> s_Conveyor.faster(), s_Conveyor));
     mStick.povLeft().onTrue(new InstantCommand(()-> s_Conveyor.slower(), s_Conveyor));
   }
