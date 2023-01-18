@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -26,9 +27,13 @@ public class Train extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Right front", MRF.get());
+    SmartDashboard.putNumber("Right rear", MRR.get());
+    SmartDashboard.putNumber("Left front", MLF.get());
+    SmartDashboard.putNumber("Left rear", MLR.get());
   }
-  public void Drive(double ySpeed, double xSpeed){
-    mDrive.arcadeDrive(ySpeed, xSpeed);
+  public void Drive(double xSpeed, double ySpeed){
+    mDrive.arcadeDrive(ySpeed, -xSpeed);
   }
 
   public void moverUno(double speed) {
