@@ -4,11 +4,10 @@
 
 package frc.robot;
 
-import com.revrobotics.ColorSensorV3;
-
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
-import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,8 +23,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  private final I2C.Port i2cPort = I2C.Port.kOnboard;
-  private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
+  private final AnalogInput ultrasonic = new AnalogInput(0);
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -67,10 +65,14 @@ public class Robot extends TimedRobot {
 
     // SmartDashboard.putNumber("xJerk", xJerk);
     // SmartDashboard.putNumber("yJerk", yJerk);
-    double IR = m_colorSensor.getIR();
-    SmartDashboard.putNumber("IR", IR);
-    int proximity = m_colorSensor.getProximity();
-    SmartDashboard.putNumber("Proximidad", proximity);
+
+    double rawValue = ultrasonic.getValue();
+    double voltage_scale_factor = 5/RobotController.getVoltage5V();
+    double currentDistanceCentimeters = rawValue * voltage_scale_factor * 0.125;
+    double currentDistanceInches = rawValue * voltage_scale_factor * 0.0492;
+    SmartDashboard.putNumber("Distancia en cm:", currentDistanceCentimeters);
+    SmartDashboard.putNumber("Distancia en inch", currentDistanceInches);
+
     CommandScheduler.getInstance().run();
   }
 
