@@ -69,7 +69,8 @@ public class Robot extends TimedRobot {
     double rawValue = ultrasonic.getValue();
     double voltage_scale_factor = 5/RobotController.getVoltage5V();
     double currentDistanceInches = rawValue * voltage_scale_factor * 0.0492;
-    SmartDashboard.putString("Distancia en inch", (currentDistanceInches/12) + "ft " + (currentDistanceInches%12) + "in");
+    double feet = currentDistanceInches/12, inch = currentDistanceInches % 12;
+    SmartDashboard.putNumberArray("Feet and inch", new double[] {feet, inch});
 
     CommandScheduler.getInstance().run();
   }
