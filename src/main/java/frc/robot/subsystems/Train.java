@@ -27,10 +27,10 @@ public class Train extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Right front", MRF.get());
-    SmartDashboard.putNumber("Right rear", MRR.get());
-    SmartDashboard.putNumber("Left front", MLF.get());
-    SmartDashboard.putNumber("Left rear", MLR.get());
+    // SmartDashboard.putNumber("Right front", MRF.get());
+    // SmartDashboard.putNumber("Right rear", MRR.get());
+    // SmartDashboard.putNumber("Left front", MLF.get());
+    // SmartDashboard.putNumber("Left rear", MLR.get());
   }
   public void Drive(double xSpeed, double ySpeed){
     mDrive.arcadeDrive(ySpeed, -xSpeed);

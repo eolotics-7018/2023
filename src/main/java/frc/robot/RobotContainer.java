@@ -71,6 +71,7 @@ public class RobotContainer {
     mStick.leftTrigger().whileTrue(new RunCommand(()-> s_Conveyor.beltMove(-mStick.getLeftTriggerAxis()), s_Conveyor));
     mStick.a().whileTrue(new RunCommand(()->s_Wing.pistonMove(1.0), s_Wing));
     mStick.b().whileTrue(new RunCommand(()->s_Wing.pistonMove(-1.0), s_Wing));
+    mStick.x().onTrue(new InstantCommand(()->s_Conveyor.toggleBeltUp(), s_Conveyor));
     mStick.povRight().onTrue(new InstantCommand(()-> s_Conveyor.faster(), s_Conveyor));
     mStick.povLeft().onTrue(new InstantCommand(()-> s_Conveyor.slower(), s_Conveyor));
   }

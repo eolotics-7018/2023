@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -14,16 +16,15 @@ import frc.robot.Constants;
 public class Conveyor extends SubsystemBase {
   /** Creates a new Conveyor. */
   private final CANSparkMax mBelt = new CANSparkMax(Constants.OperatorConstants.kPBelt, MotorType.kBrushless);
-  private final CANSparkMax mBeltUp = new CANSparkMax(Constants.OperatorConstants.kPBeltUp, MotorType.kBrushless);
+  private final Spark mBeltUp = new Spark(Constants.OperatorConstants.kPBeltUp);
 
-  private boolean beltUpOn = true;
+  private static boolean beltUpOn = true;
 
   private RelativeEncoder encoder;
   private double motorSpeedProportion = 1;
 
   public Conveyor() {
     mBelt.restoreFactoryDefaults();
-    mBeltUp.restoreFactoryDefaults();
 
     encoder = mBelt.getEncoder();
   }
@@ -58,8 +59,8 @@ public class Conveyor extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Encoder position: ", encoder.getPosition());
-    SmartDashboard.putNumber("Encoder velocity: ", encoder.getVelocity());
+    SmartDashboard.putNumber("BeltUp", mBeltUp.get());
+    SmartDashboard.putNumber("Belt", mBelt.get());
     SmartDashboard.putNumber("Output Percentage", motorSpeedProportion);
   }
 
