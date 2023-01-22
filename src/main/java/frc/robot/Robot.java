@@ -70,8 +70,8 @@ public class Robot extends TimedRobot {
     double voltage_scale_factor = 5/RobotController.getVoltage5V();
     double currentDistanceInches = rawValue * voltage_scale_factor * 0.0492;
     double feet = currentDistanceInches/12, inch = currentDistanceInches % 12;
-    SmartDashboard.putNumber("Feet", feet);
-    SmartDashboard.putNumber("Inch", inch);
+    SmartDashboard.putNumber("Feet", Math.round(feet));
+    SmartDashboard.putNumber("Inch", Math.round(inch));
 
     CommandScheduler.getInstance().run();
   }

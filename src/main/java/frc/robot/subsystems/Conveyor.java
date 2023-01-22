@@ -30,10 +30,8 @@ public class Conveyor extends SubsystemBase {
   }
 
   public void beltMove(double speed){
-    mBelt.set(speed * motorSpeedProportion);
-    if (beltUpOn) {
-      mBeltUp.set(speed * motorSpeedProportion);
-    }
+    mBelt.set(speed);
+    mBeltUp.set(speed * motorSpeedProportion);
   }
 
   public void faster() {

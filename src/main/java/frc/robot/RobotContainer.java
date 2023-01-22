@@ -46,7 +46,8 @@ public class RobotContainer {
     // s_DriveTrain.setDefaultCommand(new RunCommand(()->s_DriveTrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_DriveTrain));
     s_Conveyor.setDefaultCommand(new RunCommand(()->s_Conveyor.beltMove(0.0), s_Conveyor));
     s_Wing.setDefaultCommand(new RunCommand(()->s_Wing.pistonMove(0.0), s_Wing));
-    s_DriveTrain.setDefaultCommand(new RunCommand(()-> s_DriveTrain.Drive(mStickTrain.getY(), mStickTrain.getZ()*0.5), s_DriveTrain));
+    // s_DriveTrain.setDefaultCommand(new RunCommand(()-> s_DriveTrain.Drive(mStickTrain.getY(), mStickTrain.getZ()*0.8), s_DriveTrain));
+    // s_DriveTrain.setDefaultCommand(new RunCommand(()->s_DriveTrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_DriveTrain));
   }
 
 
@@ -74,6 +75,7 @@ public class RobotContainer {
     mStick.x().onTrue(new InstantCommand(()->s_Conveyor.toggleBeltUp(), s_Conveyor));
     mStick.povRight().onTrue(new InstantCommand(()-> s_Conveyor.faster(), s_Conveyor));
     mStick.povLeft().onTrue(new InstantCommand(()-> s_Conveyor.slower(), s_Conveyor));
+    mStick.start().and(mStick.button(7)).toggleOnTrue(new RunCommand(()->s_DriveTrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_DriveTrain));
   }
   
   /**
