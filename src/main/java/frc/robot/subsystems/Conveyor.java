@@ -18,7 +18,6 @@ public class Conveyor extends SubsystemBase {
   private final CANSparkMax mBelt = new CANSparkMax(Constants.OperatorConstants.kPBelt, MotorType.kBrushless);
   private final Spark mBeltUp = new Spark(Constants.OperatorConstants.kPBeltUp);
 
-  private static boolean beltUpOn = true;
 
   private RelativeEncoder encoder;
   private double motorSpeedProportion = 1;
@@ -46,9 +45,7 @@ public class Conveyor extends SubsystemBase {
     }
   }
 
-  public void toggleBeltUp() {
-    beltUpOn = !beltUpOn;
-  }
+  
 
   public RelativeEncoder getEncoder() {
     return encoder;
