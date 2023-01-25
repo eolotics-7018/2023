@@ -6,6 +6,9 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,22 +24,32 @@ public class Train extends SubsystemBase {
   private final MotorControllerGroup mLeft = new  MotorControllerGroup(MLF, MLR) ;
   private final MotorControllerGroup mRight = new MotorControllerGroup(MRF, MRR);
   public DifferentialDrive mDrive = new DifferentialDrive(mLeft, mRight);
-  
+
+  private final AnalogInput ultrasonic = new AnalogInput(3);
+
   public Train() {}
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    // SmartDashboard.putNumber("Right front", MRF.get());
-    // SmartDashboard.putNumber("Right rear", MRR.get());
-    // SmartDashboard.putNumber("Left front", MLF.get());
-    // SmartDashboard.putNumber("Left rear", MLR.get());
-  }
-  public void Drive(double xSpeed, double ySpeed){
-    mDrive.arcadeDrive(ySpeed, -xSpeed);
+  public void Drive(double ySpeed, double xSpeed){
+    mDrive.arcadeDrive(xSpeed, ySpeed);
   }
 
   public void moverUno(double speed) {
     MRR.set(ControlMode.PercentOutput, speed);
+  }
+
+  public double[] getSonarValue() {
+    double rawValue = ultrasonic.getValue();
+    double voltage_scale_factor = 5/RobotController.getVoltage5V();
+    double currentDistanceInches = rawValue * voltage_scale_factor * 0.0492;
+    double feet = currentDistanceInches/12, inch = currentDistanceInches % 12;
+    return new double[]{feet, inch};
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+    double[] distance = getSonarValue();
+    SmartDashboard.putNumber("Feet", Math.round(distance[0]));
+    SmartDashboard.putNumber("Inch", Math.round(distance[1]));
   }
 }

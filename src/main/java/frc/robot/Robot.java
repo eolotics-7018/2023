@@ -5,12 +5,9 @@
 package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -23,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  private final AnalogInput ultrasonic = new AnalogInput(3);
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -65,13 +61,6 @@ public class Robot extends TimedRobot {
 
     // SmartDashboard.putNumber("xJerk", xJerk);
     // SmartDashboard.putNumber("yJerk", yJerk);
-
-    double rawValue = ultrasonic.getValue();
-    double voltage_scale_factor = 5/RobotController.getVoltage5V();
-    double currentDistanceInches = rawValue * voltage_scale_factor * 0.0492;
-    double feet = currentDistanceInches/12, inch = currentDistanceInches % 12;
-    SmartDashboard.putNumber("Feet", Math.round(feet));
-    SmartDashboard.putNumber("Inch", Math.round(inch));
 
     CommandScheduler.getInstance().run();
   }

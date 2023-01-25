@@ -17,8 +17,6 @@ public class Conveyor extends SubsystemBase {
   /** Creates a new Conveyor. */
   private final CANSparkMax mBelt = new CANSparkMax(Constants.OperatorConstants.kPBelt, MotorType.kBrushless);
   private final Spark mBeltUp = new Spark(Constants.OperatorConstants.kPBeltUp);
-
-
   private RelativeEncoder encoder;
   private double motorSpeedProportion = 1;
 
@@ -45,8 +43,11 @@ public class Conveyor extends SubsystemBase {
     }
   }
 
+  public Conveyor setSpeedProportion(double speed) {
+    motorSpeedProportion = speed;
+    return this;
+  }
   
-
   public RelativeEncoder getEncoder() {
     return encoder;
   }
