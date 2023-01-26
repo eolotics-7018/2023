@@ -5,9 +5,9 @@
 package frc.robot;
 
 // import frc.robot.commands.Autos;
-import frc.robot.commands.ConveyorRotations;
+// import frc.robot.commands.ConveyorRotations;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.TimedTrain;
+import frc.robot.commands.PIDTrain;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Train;
@@ -79,6 +79,7 @@ public class RobotContainer {
     mStick.povRight().onTrue(new InstantCommand(()-> s_Conveyor.faster(), s_Conveyor));
     mStick.povLeft().onTrue(new InstantCommand(()-> s_Conveyor.slower(), s_Conveyor));
     mStick.start().and(mStick.button(7)).toggleOnTrue(new RunCommand(()->s_DriveTrain.Drive(-mStick.getLeftY(), mStick.getRightX()), s_DriveTrain));
+    mStick.leftStick().onTrue(new InstantCommand(()-> s_DriveTrain.invert(), s_DriveTrain));
   }
   
   /**
@@ -90,8 +91,16 @@ public class RobotContainer {
     // An example command will be run in autonomous
     // return Autos.exampleAuto(m_exampleSubsystem);
     // return new ConveyorRotations(s_Conveyor, 500);
+
     return Commands.sequence(
-      new TimedTrain(s_DriveTrain), 
-      new RunCommand(()-> s_Conveyor.setSpeedProportion(0.75).beltMove(1), s_Conveyor).withTimeout(3));
+      new PIDTrain(s_DriveTrain, 5, 8)
+
+      // new RunCommand(()-> s_DriveTrain.Drive(0.4, 0), s_DriveTrain).until(()-> {return s_DriveTrain.isCloserThan(3, 8);}),
+      // new InstantCommand(()->s_DriveTrain.Drive(0, 0), s_DriveTrain)
+
+      // // new TimedTrain(s_DriveTrain), 
+      // new RunCommand(()-> s_Conveyor.setSpeedProportion(0.75).beltMove(1), s_Conveyor).withTimeout(3)
+      // new PrintCommand("execution").repeatedly().until(()-> s_DriveTrain.isCloserThan(2, 2))
+    );
   }
 }

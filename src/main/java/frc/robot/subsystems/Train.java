@@ -26,30 +26,43 @@ public class Train extends SubsystemBase {
   public DifferentialDrive mDrive = new DifferentialDrive(mLeft, mRight);
 
   private final AnalogInput ultrasonic = new AnalogInput(3);
+  private int invertRotation = 1;
 
   public Train() {}
 
   public void Drive(double ySpeed, double xSpeed){
-    mDrive.arcadeDrive(xSpeed, ySpeed);
+    mDrive.arcadeDrive(xSpeed * invertRotation, ySpeed);
+  }
+
+  public void invert() {
+    invertRotation *= -1;
   }
 
   public void moverUno(double speed) {
     MRR.set(ControlMode.PercentOutput, speed);
   }
 
-  public double[] getSonarValue() {
+  public double getSonarValue() {
     double rawValue = ultrasonic.getValue();
     double voltage_scale_factor = 5/RobotController.getVoltage5V();
     double currentDistanceInches = rawValue * voltage_scale_factor * 0.0492;
-    double feet = currentDistanceInches/12, inch = currentDistanceInches % 12;
-    return new double[]{feet, inch};
+    // double feet = currentDistanceInches/12, inch = currentDistanceInches % 12;
+    return currentDistanceInches;
+  }
+
+  public boolean isCloserThan(int feets, int inches) {
+    double distance = getSonarValue(), totalInches = (feets*12) + inches;
+    if (distance <= totalInches) {
+      return true;
+    }
+    return false;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    double[] distance = getSonarValue();
-    SmartDashboard.putNumber("Feet", Math.round(distance[0]));
-    SmartDashboard.putNumber("Inch", Math.round(distance[1]));
+    double distance = getSonarValue();
+    SmartDashboard.putNumber("Feet", Math.round(distance / 12));
+    SmartDashboard.putNumber("Inch", Math.round(distance % 12));
   }
 }

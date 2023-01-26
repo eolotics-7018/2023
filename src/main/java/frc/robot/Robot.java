@@ -8,8 +8,10 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.PIDTrain;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -28,8 +30,9 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    CameraServer.startAutomaticCapture();
+    // CameraServer.startAutomaticCapture();
     m_robotContainer = new RobotContainer();
+    SmartDashboard.putNumber("kP", PIDTrain.kP);
   }
   
   double prevXAccel = 0, prevYAccel = 0;
@@ -61,6 +64,7 @@ public class Robot extends TimedRobot {
 
     // SmartDashboard.putNumber("xJerk", xJerk);
     // SmartDashboard.putNumber("yJerk", yJerk);
+    PIDTrain.kP = SmartDashboard.getNumber("kP", 0);
 
     CommandScheduler.getInstance().run();
   }
