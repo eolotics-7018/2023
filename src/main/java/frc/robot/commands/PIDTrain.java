@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Train;
@@ -13,7 +12,7 @@ import frc.robot.subsystems.Train;
 public class PIDTrain extends CommandBase {
 
   private Train driveTrain;
-  public static double kP = 0.1, kI = 0.1, kD = 0.01, iLimit = 0.5;
+  public static double kP = 0.004, kI = 0.05, kD = 0.01, iLimit = 0.5;
   private double setpoint, errorSum, lastTimeStamp, lastError, feets, inches;
 
   /** Creates a new TimedTrain. */
@@ -33,7 +32,7 @@ public class PIDTrain extends CommandBase {
     lastTimeStamp = Timer.getFPGATimestamp();
     lastError = 0;
     SmartDashboard.putString("Completado", "no");
-    driveTrain.mDrive.setMaxOutput(0.4);
+    driveTrain.mDrive.setMaxOutput(0.5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -46,7 +45,7 @@ public class PIDTrain extends CommandBase {
     // double dt = Timer.getFPGATimestamp() - lastTimeStamp;
 
     // if (Math.abs(error) < iLimit) {
-    //   errorSum += error * dt;
+      // errorSum += error * dt;
     // }
 
     // double errorRate = (error - lastError) / dt;

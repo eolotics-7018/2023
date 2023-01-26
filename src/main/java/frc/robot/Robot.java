@@ -33,6 +33,7 @@ public class Robot extends TimedRobot {
     // CameraServer.startAutomaticCapture();
     m_robotContainer = new RobotContainer();
     SmartDashboard.putNumber("kP", PIDTrain.kP);
+    SmartDashboard.putNumber("kI", PIDTrain.kI);
   }
   
   double prevXAccel = 0, prevYAccel = 0;
@@ -65,6 +66,7 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putNumber("xJerk", xJerk);
     // SmartDashboard.putNumber("yJerk", yJerk);
     PIDTrain.kP = SmartDashboard.getNumber("kP", 0);
+    PIDTrain.kI = SmartDashboard.getNumber("kI", 0);
 
     CommandScheduler.getInstance().run();
   }

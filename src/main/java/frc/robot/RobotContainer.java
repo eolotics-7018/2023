@@ -93,7 +93,7 @@ public class RobotContainer {
     // return new ConveyorRotations(s_Conveyor, 500);
 
     return Commands.sequence(
-      new PIDTrain(s_DriveTrain, 5, 8)
+      new PIDTrain(s_DriveTrain, 6, 8)
 
       // new RunCommand(()-> s_DriveTrain.Drive(0.4, 0), s_DriveTrain).until(()-> {return s_DriveTrain.isCloserThan(3, 8);}),
       // new InstantCommand(()->s_DriveTrain.Drive(0, 0), s_DriveTrain)
