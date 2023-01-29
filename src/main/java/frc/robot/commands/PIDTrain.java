@@ -12,7 +12,7 @@ import frc.robot.subsystems.Train;
 public class PIDTrain extends CommandBase {
 
   private Train driveTrain;
-  public static double kP = 0.004, kI = 0.05, kD = 0.01, iLimit = 0.5;
+  public static double kP = 0.007, kI = 0.004, kD = 0.002, iLimit = 96, maxOutput = 0.7;
   private double setpoint, errorSum, lastTimeStamp, lastError, feets, inches;
 
   /** Creates a new TimedTrain. */
@@ -28,40 +28,36 @@ public class PIDTrain extends CommandBase {
   @Override
   public void initialize() {
     setpoint = (feets * 12) + inches;
-    errorSum = 0;
     lastTimeStamp = Timer.getFPGATimestamp();
-    lastError = 0;
     SmartDashboard.putString("Completado", "no");
-    driveTrain.mDrive.setMaxOutput(0.5);
   }
-
+  
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    driveTrain.mDrive.setMaxOutput(maxOutput);
     double distance = driveTrain.getSonarValue();
 
     // Cálculos
     double error = distance - setpoint;
-    // double dt = Timer.getFPGATimestamp() - lastTimeStamp;
+    double dt = Timer.getFPGATimestamp() - lastTimeStamp;
 
-    // if (Math.abs(error) < iLimit) {
-      // errorSum += error * dt;
-    // }
+    if (Math.abs(error) < iLimit) {
+      errorSum += error * dt;
+    }
 
-    // double errorRate = (error - lastError) / dt;
+    double errorRate = (error - lastError) / dt;
 
-    // double outputSpeed = kP * error + kI * errorSum + kD * errorRate;
-    double outputSpeed = kP * error;
+    double outputSpeed = kP * error + kI * errorSum + kD * errorRate;
+    // double outputSpeed = kP * error + kI * errorSum;
     driveTrain.Drive(outputSpeed, 0);
 
     lastTimeStamp = Timer.getFPGATimestamp();
     lastError = error;
 
-    // SmartDashboard.putNumber("Error", error);
     SmartDashboard.putNumber("outputSpeed", outputSpeed);
     SmartDashboard.putNumber("Setpoint", setpoint);
     SmartDashboard.putNumber("Distancia", distance);
-    // SmartDashboard.putNumberArray("grafico", new double[]{outputSpeed,setpoint,distance});
   }
 
   // Called once the command ends or is interrupted.
@@ -71,6 +67,8 @@ public class PIDTrain extends CommandBase {
     SmartDashboard.putString("Completado", "si");
     SmartDashboard.clearPersistent("Distancia");
     SmartDashboard.clearPersistent("outputSpeed");
+    errorSum = 0;
+    lastError = 0;
     driveTrain.mDrive.setMaxOutput(1);
   }
 

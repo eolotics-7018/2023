@@ -34,6 +34,8 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     SmartDashboard.putNumber("kP", PIDTrain.kP);
     SmartDashboard.putNumber("kI", PIDTrain.kI);
+    SmartDashboard.putNumber("kD", PIDTrain.kD);
+    SmartDashboard.putNumber("maxOutput", PIDTrain.maxOutput);
   }
   
   double prevXAccel = 0, prevYAccel = 0;
@@ -67,6 +69,8 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putNumber("yJerk", yJerk);
     PIDTrain.kP = SmartDashboard.getNumber("kP", 0);
     PIDTrain.kI = SmartDashboard.getNumber("kI", 0);
+    PIDTrain.kD = SmartDashboard.getNumber("kD", 0);
+    PIDTrain.maxOutput = SmartDashboard.getNumber("maxOutput", 0);
 
     CommandScheduler.getInstance().run();
   }
