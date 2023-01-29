@@ -16,14 +16,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+// import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 //Recuerdo de Juan Jimenez Pineda
 //Pertenecí 4 años a la competencia 
 //Todos me la pelaban menos Edy
 //Recuerden mi código y recuerdenme a mi 
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,7 +33,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final CommandXboxController mStick = new CommandXboxController(Constants.OperatorConstants.KPControl);
-  private final CommandJoystick mStickTrain = new CommandJoystick(1);
+  // private final CommandJoystick mStickTrain = new CommandJoystick(1);
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Train s_DriveTrain = new Train();
   private final Conveyor s_Conveyor = new Conveyor();
@@ -47,7 +46,7 @@ public class RobotContainer {
     
     // s_DriveTrain.setDefaultCommand(new RunCommand(()->s_DriveTrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_DriveTrain));
     s_Conveyor.setDefaultCommand(new RunCommand(()->s_Conveyor.beltMove(0.0), s_Conveyor));
-    // s_Wing.setDefaultCommand(new RunCommand(()->s_Wing.pistonMove(0.0), s_Wing));
+    s_Wing.setDefaultCommand(new RunCommand(()->s_Wing.pistonMove(0.0), s_Wing));
     // s_DriveTrain.setDefaultCommand(new RunCommand(()-> s_DriveTrain.Drive(mStickTrain.getY(), mStickTrain.getX(), s_DriveTrain));
     // s_DriveTrain.setDefaultCommand(new RunCommand(()->s_DriveTrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_DriveTrain));
   }
@@ -72,9 +71,9 @@ public class RobotContainer {
 
     mStick.rightTrigger().whileTrue(new RunCommand(()-> s_Conveyor.beltMove(mStick.getRightTriggerAxis()), s_Conveyor));
     mStick.leftTrigger().whileTrue(new RunCommand(()-> s_Conveyor.beltMove(-mStick.getLeftTriggerAxis()), s_Conveyor));
-    mStick.a().whileTrue(new RunCommand(()->s_Wing.pistonMove(1.0), s_Wing));
-    mStick.b().whileTrue(new RunCommand(()->s_Wing.pistonMove(-1.0), s_Wing));
-    mStick.x().onTrue(new RunCommand(()->s_Wing.pistonMove(0.0), s_Wing));
+    mStick.a().toggleOnTrue(new RunCommand(()->s_Wing.pistonMove(1.0), s_Wing).withTimeout(3));
+    mStick.b().toggleOnTrue(new RunCommand(()->s_Wing.pistonMove(-1.0), s_Wing).withTimeout(3));
+    // mStick.x().onTrue(new RunCommand(()->s_Wing.pistonMove(0.0), s_Wing));
     
     mStick.povRight().onTrue(new InstantCommand(()-> s_Conveyor.faster(), s_Conveyor));
     mStick.povLeft().onTrue(new InstantCommand(()-> s_Conveyor.slower(), s_Conveyor));
