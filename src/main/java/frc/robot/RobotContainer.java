@@ -4,19 +4,15 @@
 
 package frc.robot;
 
-// import frc.robot.commands.Autos;
-// import frc.robot.commands.ConveyorRotations;
+import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.PIDTrain;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.Train;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Wing;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-// import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 //Recuerdo de Juan Jimenez Pineda
@@ -32,25 +28,23 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final CommandXboxController mStick = new CommandXboxController(Constants.OperatorConstants.KPControl);
-  // private final CommandJoystick mStickTrain = new CommandJoystick(1);
+  private final CommandXboxController mStick = new CommandXboxController(0);
+  // private final CommandJoystick mStickDrivetrain = new CommandJoystick(1);
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final Train s_DriveTrain = new Train();
-  private final Conveyor s_Conveyor = new Conveyor();
-  private final Wing s_Wing = new Wing();
+  private final Drivetrain s_drivetrain = new Drivetrain();
+  private final Conveyor s_conveyor = new Conveyor();
+  private final Wing s_wing = new Wing();
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    s_conveyor.setDefaultCommand(new RunCommand(()->s_conveyor.beltMove(0.0), s_conveyor));
+    s_wing.setDefaultCommand(new RunCommand(()->s_wing.pistonMove(0.0), s_wing));
+    s_drivetrain.setDefaultCommand(new RunCommand(()-> s_drivetrain.Drive(0, 0), s_drivetrain));
+    // s_drivetrain.setDefaultCommand(new RunCommand(()->s_drivetrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_drivetrain));
+    
     // Configure the trigger bindings
     configureBindings();
-    
-    // s_DriveTrain.setDefaultCommand(new RunCommand(()->s_DriveTrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_DriveTrain));
-    s_Conveyor.setDefaultCommand(new RunCommand(()->s_Conveyor.beltMove(0.0), s_Conveyor));
-    s_Wing.setDefaultCommand(new RunCommand(()->s_Wing.pistonMove(0.0), s_Wing));
-    // s_DriveTrain.setDefaultCommand(new RunCommand(()-> s_DriveTrain.Drive(mStickTrain.getY(), mStickTrain.getX(), s_DriveTrain));
-    // s_DriveTrain.setDefaultCommand(new RunCommand(()->s_DriveTrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_DriveTrain));
   }
-
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -69,16 +63,16 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
 
-    mStick.rightTrigger().whileTrue(new RunCommand(()-> s_Conveyor.beltMove(mStick.getRightTriggerAxis()), s_Conveyor));
-    mStick.leftTrigger().whileTrue(new RunCommand(()-> s_Conveyor.beltMove(-mStick.getLeftTriggerAxis()), s_Conveyor));
-    mStick.a().toggleOnTrue(new RunCommand(()->s_Wing.pistonMove(1.0), s_Wing).withTimeout(3));
-    mStick.b().toggleOnTrue(new RunCommand(()->s_Wing.pistonMove(-1.0), s_Wing).withTimeout(3));
-    // mStick.x().onTrue(new RunCommand(()->s_Wing.pistonMove(0.0), s_Wing));
+    mStick.rightTrigger().whileTrue(new RunCommand(()-> s_conveyor.beltMove(mStick.getRightTriggerAxis()), s_conveyor));
+    mStick.leftTrigger().whileTrue(new RunCommand(()-> s_conveyor.beltMove(-mStick.getLeftTriggerAxis()), s_conveyor));
+    mStick.a().onTrue(new RunCommand(()->s_wing.pistonMove(1.0), s_wing).withTimeout(3));
+    mStick.b().onTrue(new RunCommand(()->s_wing.pistonMove(-1.0), s_wing).withTimeout(3));
+    mStick.y().onTrue(new InstantCommand(() -> s_drivetrain.desacelerar(), s_drivetrain));
     
-    mStick.povRight().onTrue(new InstantCommand(()-> s_Conveyor.faster(), s_Conveyor));
-    mStick.povLeft().onTrue(new InstantCommand(()-> s_Conveyor.slower(), s_Conveyor));
-    mStick.start().and(mStick.button(7)).toggleOnTrue(new RunCommand(()->s_DriveTrain.Drive(-mStick.getLeftY(), mStick.getRightX()), s_DriveTrain));
-    mStick.leftStick().onTrue(new InstantCommand(()-> s_DriveTrain.invert(), s_DriveTrain));
+    mStick.povRight().onTrue(new InstantCommand(()-> s_conveyor.faster(), s_conveyor));
+    mStick.povLeft().onTrue(new InstantCommand(()-> s_conveyor.slower(), s_conveyor));
+    mStick.start().and(mStick.button(7)).toggleOnTrue(new RunCommand(()->s_drivetrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_drivetrain));
+    // mStick.leftStick().onTrue(new InstantCommand(()-> s_drivetrain.invert(), s_drivetrain));
   }
   
   /**
@@ -88,18 +82,17 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    // return Autos.exampleAuto(m_exampleSubsystem);
-    // return new ConveyorRotations(s_Conveyor, 500);
+    return Autos.exampleAuto(m_exampleSubsystem);
 
-    return Commands.sequence(
-      new PIDTrain(s_DriveTrain, 6, 8)
+    // return Commands.sequence(
+    //   new PIDDrivetrain(s_drivetrain, 4, 8)
 
-      // new RunCommand(()-> s_DriveTrain.Drive(0.4, 0), s_DriveTrain).until(()-> {return s_DriveTrain.isCloserThan(3, 8);}),
-      // new InstantCommand(()->s_DriveTrain.Drive(0, 0), s_DriveTrain)
+      // new RunCommand(()-> s_drivetrain.Drive(0.4, 0), s_drivetrain).until(()-> {return s_drivetrain.isCloserThan(3, 8);}),
+      // new InstantCommand(()->s_drivetrain.Drive(0, 0), s_drivetrain)
 
-      // // new TimedTrain(s_DriveTrain), 
-      // new RunCommand(()-> s_Conveyor.setSpeedProportion(0.75).beltMove(1), s_Conveyor).withTimeout(3)
-      // new PrintCommand("execution").repeatedly().until(()-> s_DriveTrain.isCloserThan(2, 2))
-    );
+      // // new TimedDrivetrain(s_drivetrain), 
+      // new RunCommand(()-> s_conveyor.setSpeedProportion(0.75).beltMove(1), s_conveyor).withTimeout(3)
+      // new PrintCommand("execution").repeatedly().until(()-> s_drivetrain.isCloserThan(2, 2))
+    // );
   }
 }

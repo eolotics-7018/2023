@@ -7,16 +7,16 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Train;
+import frc.robot.subsystems.Drivetrain;
 
 public class PIDTrain extends CommandBase {
 
-  private Train driveTrain;
+  private Drivetrain driveTrain;
   public static double kP = 0.007, kI = 0.004, kD = 0.002, iLimit = 96, maxOutput = 0.7;
   private double setpoint, errorSum, lastTimeStamp, lastError, feets, inches;
 
   /** Creates a new TimedTrain. */
-  public PIDTrain(Train subsystem, int feets, int inches) {
+  public PIDTrain(Drivetrain subsystem, int feets, int inches) {
     // Use addRequirements() here to declare subsystem dependencies.
     driveTrain = subsystem;
     this.feets = feets;

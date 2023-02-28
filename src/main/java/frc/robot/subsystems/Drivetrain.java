@@ -4,9 +4,7 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -15,8 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Train extends SubsystemBase {
-  /** Creates a new Train. */
+public class Drivetrain extends SubsystemBase {
+  /** Creates a new Drivetrain. */
   private final WPI_VictorSPX MLF = new WPI_VictorSPX(Constants.OperatorConstants.kPMLF);
   private final WPI_VictorSPX MLR = new WPI_VictorSPX(Constants.OperatorConstants.kPMLR);
   private final WPI_VictorSPX MRF = new WPI_VictorSPX(Constants.OperatorConstants.kPMRF);
@@ -28,7 +26,7 @@ public class Train extends SubsystemBase {
   private final AnalogInput ultrasonic = new AnalogInput(3);
   private int invertRotation = 1;
 
-  public Train() {}
+  public Drivetrain() {}
 
   public void Drive(double ySpeed, double xSpeed){
     mDrive.arcadeDrive(xSpeed * invertRotation, ySpeed);
@@ -38,8 +36,12 @@ public class Train extends SubsystemBase {
     invertRotation *= -1;
   }
 
-  public void moverUno(double speed) {
-    MRR.set(ControlMode.PercentOutput, speed);
+  // public void moverUno(double speed) {
+  //   MRR.set(ControlMode.PercentOutput, speed);
+  // }
+
+  public void desacelerar() {
+    mDrive.tankDrive(-mLeft.get(), -mRight.get());
   }
 
   public double getSonarValue() {
@@ -56,13 +58,15 @@ public class Train extends SubsystemBase {
       return true;
     }
     return false;
-  }
+  } 
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    double distance = getSonarValue();
-    SmartDashboard.putNumber("Feet", Math.round(distance / 12));
-    SmartDashboard.putNumber("Inch", Math.round(distance % 12));
+    // double distance = getSonarValue();
+    // SmartDashboard.putNumber("Feet", Math.floor(distance / 12));
+    // SmartDashboard.putNumber("Inch", Math.round(distance % 12));
+    SmartDashboard.putNumber("Left", mLeft.get());
+    SmartDashboard.putNumber("Right", mRight.get());
   }
 }
