@@ -67,7 +67,7 @@ public class RobotContainer {
     mStick.leftTrigger().whileTrue(new RunCommand(()-> s_conveyor.beltMove(-mStick.getLeftTriggerAxis()), s_conveyor));
     mStick.a().onTrue(new RunCommand(()->s_wing.pistonMove(1.0), s_wing).withTimeout(3));
     mStick.b().onTrue(new RunCommand(()->s_wing.pistonMove(-1.0), s_wing).withTimeout(3));
-    mStick.y().onTrue(new InstantCommand(() -> s_drivetrain.desacelerar(), s_drivetrain));
+    mStick.y().onTrue(new RunCommand(() -> s_drivetrain.desacelerar(), s_drivetrain).withTimeout(0.5));
     
     mStick.povRight().onTrue(new InstantCommand(()-> s_conveyor.faster(), s_conveyor));
     mStick.povLeft().onTrue(new InstantCommand(()-> s_conveyor.slower(), s_conveyor));

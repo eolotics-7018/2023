@@ -22,7 +22,7 @@ public class ConveyorRotations extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     s_conveyor = subsystem;
     this.setpoint = setpoint;
-    this.encoder = s_conveyor.getEncoder();
+    this.encoder = s_conveyor.getLeftEncoder();
     addRequirements(subsystem);
   }
 

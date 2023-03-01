@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.PIDTrain;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -30,15 +29,15 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    // CameraServer.startAutomaticCapture();
+    CameraServer.startAutomaticCapture();
     m_robotContainer = new RobotContainer();
-    SmartDashboard.putNumber("kP", PIDTrain.kP);
-    SmartDashboard.putNumber("kI", PIDTrain.kI);
-    SmartDashboard.putNumber("kD", PIDTrain.kD);
-    SmartDashboard.putNumber("maxOutput", PIDTrain.maxOutput);
+    // SmartDashboard.putNumber("kP", PIDTrain.kP);
+    // SmartDashboard.putNumber("kI", PIDTrain.kI);
+    // SmartDashboard.putNumber("kD", PIDTrain.kD);
+    // SmartDashboard.putNumber("maxOutput", PIDTrain.maxOutput);
   }
   
-  double prevXAccel = 0, prevYAccel = 0;
+  double prevXAccel = 0, prevYAccel = 0, prevZAccel = 0;
   Accelerometer accelerometer = new BuiltInAccelerometer();
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
@@ -54,23 +53,30 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
 
-    // double xAccel = accelerometer.getX();
-    // double yAccel = accelerometer.getY();
+    double xAccel = accelerometer.getX();
+    double yAccel = accelerometer.getY();
+    double zAccel = accelerometer.getZ();
 
     // Calculates the jerk in the X and Y directions
     // Divides by .02 because default loop timing is 20ms
-    // double xJerk = (xAccel - prevXAccel)/.02;
-    // double yJerk = (yAccel - prevYAccel)/.02;
+    double xJerk = (xAccel - prevXAccel)/.02;
+    double yJerk = (yAccel - prevYAccel)/.02;
+    double zJerk = (zAccel - prevZAccel)/.02;
 
-    // prevXAccel = xAccel;
-    // prevYAccel = yAccel;
+    prevXAccel = xAccel;
+    prevYAccel = yAccel;
 
-    // SmartDashboard.putNumber("xJerk", xJerk);
-    // SmartDashboard.putNumber("yJerk", yJerk);
-    PIDTrain.kP = SmartDashboard.getNumber("kP", 0);
-    PIDTrain.kI = SmartDashboard.getNumber("kI", 0);
-    PIDTrain.kD = SmartDashboard.getNumber("kD", 0);
-    PIDTrain.maxOutput = SmartDashboard.getNumber("maxOutput", 0);
+    SmartDashboard.putNumber("xAccel", xAccel);
+    SmartDashboard.putNumber("yAccel", yAccel);
+    SmartDashboard.putNumber("zAccel", zAccel);
+    SmartDashboard.putNumber("xJerk", xJerk);
+    SmartDashboard.putNumber("yJerk", yJerk);
+    SmartDashboard.putNumber("zJerk", zJerk);
+
+    // PIDTrain.kP = SmartDashboard.getNumber("kP", 0);
+    // PIDTrain.kI = SmartDashboard.getNumber("kI", 0);
+    // PIDTrain.kD = SmartDashboard.getNumber("kD", 0);
+    // PIDTrain.maxOutput = SmartDashboard.getNumber("maxOutput", 0);
 
     CommandScheduler.getInstance().run();
   }

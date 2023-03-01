@@ -14,16 +14,19 @@ package frc.robot;
  */
 public final class Constants {
   public static class OperatorConstants {
-   public final static int KPControl = 0;
-   public final static int kPMLF = 0; //0
-   public final static int kPMLR = 2; //1
-   public final static int kPMRF = 1; //2
-   public final static int kPMRR = 3; //3
-   //constantes de  la banda 
-   public final static int kPBelt = 4;
-   public final static int kPBeltUp = 1;
-   //controladores para los pistones electromecánicos
-   public final static int kPiston = 0;
- 
+    public final static int kPMLF = 0; //0
+    public final static int kPMLR = 2; //1
+    public final static int kPMRF = 1; //2
+    public final static int kPMRR = 3; //3
+    //puertos de la banda 
+    public final static int kPBelt = 1;
+    public final static int kPBeltUp = 0;
+    //controladores para los pistones electromecánicos
+    public final static int kPiston = 2;
+  }
+  
+  public final class EncoderConstants {
+    public final static int kPEncoderLeft = 4;
+    public final static int kPEncoderRight = 5;
   }
 }
