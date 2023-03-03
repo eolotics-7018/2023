@@ -4,21 +4,20 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import static frc.robot.Constants.Wing.*;
 
 public class Wing extends SubsystemBase {
-  /** Creates a new Wing. */
-  private Spark mPiston = new Spark(Constants.OperatorConstants.kPiston);
- 
+  private Spark mPiston = new Spark(kPiston);
+  
   public Wing() {}
 
+  public void pistonMove(double speed){
+    mPiston.set(speed);
+  }
+
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
-  public void pistonMove(double pistonTork){
-    mPiston.set(pistonTork);
-  }
+  public void periodic() {}
+  
 }

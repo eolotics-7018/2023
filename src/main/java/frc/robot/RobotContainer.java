@@ -4,21 +4,16 @@
 
 package frc.robot;
 
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Conveyor;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Wing;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-//Recuerdo de Juan Jimenez Pineda
-//Pertenecí 4 años a la competencia 
-//Todos me la pelaban menos Edy
-//Recuerden mi código y recuerdenme a mi 
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -29,8 +24,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final CommandXboxController mStick = new CommandXboxController(0);
-  // private final CommandJoystick mStickDrivetrain = new CommandJoystick(1);
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Drivetrain s_drivetrain = new Drivetrain();
   private final Conveyor s_conveyor = new Conveyor();
   private final Wing s_wing = new Wing();
@@ -42,7 +35,6 @@ public class RobotContainer {
     s_drivetrain.setDefaultCommand(new RunCommand(()-> s_drivetrain.Drive(0, 0), s_drivetrain));
     // s_drivetrain.setDefaultCommand(new RunCommand(()->s_drivetrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_drivetrain));
     
-    // Configure the trigger bindings
     configureBindings();
   }
 
@@ -56,23 +48,19 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-
+    // Controles de la banda/cañón
     mStick.rightTrigger().whileTrue(new RunCommand(()-> s_conveyor.beltMove(mStick.getRightTriggerAxis()), s_conveyor));
     mStick.leftTrigger().whileTrue(new RunCommand(()-> s_conveyor.beltMove(-mStick.getLeftTriggerAxis()), s_conveyor));
-    mStick.a().onTrue(new RunCommand(()->s_wing.pistonMove(1.0), s_wing).withTimeout(3));
-    mStick.b().onTrue(new RunCommand(()->s_wing.pistonMove(-1.0), s_wing).withTimeout(3));
-    mStick.y().onTrue(new RunCommand(() -> s_drivetrain.desacelerar(), s_drivetrain).withTimeout(0.5));
     
+    // Controles de la velocidad de la banda/cañón
     mStick.povRight().onTrue(new InstantCommand(()-> s_conveyor.faster(), s_conveyor));
     mStick.povLeft().onTrue(new InstantCommand(()-> s_conveyor.slower(), s_conveyor));
+
+    // Controles del piston
+    mStick.a().onTrue(new RunCommand(()->s_wing.pistonMove(1.0), s_wing).withTimeout(3));
+    mStick.b().onTrue(new RunCommand(()->s_wing.pistonMove(-1.0), s_wing).withTimeout(3));
+    
     mStick.start().and(mStick.button(7)).toggleOnTrue(new RunCommand(()->s_drivetrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_drivetrain));
-    // mStick.leftStick().onTrue(new InstantCommand(()-> s_drivetrain.invert(), s_drivetrain));
   }
   
   /**
@@ -82,17 +70,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
-
-    // return Commands.sequence(
-    //   new PIDDrivetrain(s_drivetrain, 4, 8)
-
-      // new RunCommand(()-> s_drivetrain.Drive(0.4, 0), s_drivetrain).until(()-> {return s_drivetrain.isCloserThan(3, 8);}),
-      // new InstantCommand(()->s_drivetrain.Drive(0, 0), s_drivetrain)
-
-      // // new TimedDrivetrain(s_drivetrain), 
-      // new RunCommand(()-> s_conveyor.setSpeedProportion(0.75).beltMove(1), s_conveyor).withTimeout(3)
-      // new PrintCommand("execution").repeatedly().until(()-> s_drivetrain.isCloserThan(2, 2))
-    // );
+    return Commands.sequence(new PrintCommand("hola"));
   }
 }
