@@ -32,8 +32,7 @@ public class RobotContainer {
   public RobotContainer() {
     s_conveyor.setDefaultCommand(new RunCommand(()->s_conveyor.beltMove(0.0), s_conveyor));
     s_wing.setDefaultCommand(new RunCommand(()->s_wing.pistonMove(0.0), s_wing));
-    s_drivetrain.setDefaultCommand(new RunCommand(()-> s_drivetrain.Drive(0, 0), s_drivetrain));
-    // s_drivetrain.setDefaultCommand(new RunCommand(()->s_drivetrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_drivetrain));
+    s_drivetrain.setDefaultCommand(new RunCommand(()->s_drivetrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_drivetrain));
     
     configureBindings();
   }
