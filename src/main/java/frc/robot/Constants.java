@@ -20,17 +20,15 @@ public final class Constants {
     public final static int kPMotorRightRear = 3; 
   }
   
-  public final class ConveyorConstants {
+  public final static class ConveyorConstants {
     public final static int kPBelt = 1;
     public final static int kPBeltUp = 0;
+    public final static double[] kHighGrid = {0.9, 0.4};
+    public final static double[] kMiddleGrid = {0.8, 0.3};
+    public final static double[] kDownGrid = {0.5, 0};
   }
   
   public final class Wing {
     public final static int kPiston = 2;
-  }
-
-  public final class Arduino {
-    public final static int kArduinoSlaveId = 4;
-    public final static int kMaxBytes = 32;
   }
 }

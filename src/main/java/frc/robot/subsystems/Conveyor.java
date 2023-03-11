@@ -13,7 +13,7 @@ public class Conveyor extends SubsystemBase {
   private final Spark mBelt = new Spark(kPBelt);
   private final Spark mBeltUp = new Spark(kPBeltUp);
 
-  private double motorSpeedProportion = 1;
+  private double motorSpeedProportion = 1, motorSpeedProportionUp = 1;
 
   public Conveyor() {
     mBelt.setInverted(true);
@@ -21,12 +21,18 @@ public class Conveyor extends SubsystemBase {
 
   public void beltMove(double speed){
     mBelt.set(speed * motorSpeedProportion);
-    mBeltUp.set(speed * motorSpeedProportion);
+    mBeltUp.set(speed * motorSpeedProportionUp);
   }
 
   public void faster() {
     if (motorSpeedProportion < 1) {
       motorSpeedProportion += 0.05;
+    }
+  }
+
+  public void fasterUp() {
+    if (motorSpeedProportionUp < 1) {
+      motorSpeedProportionUp += 0.05;
     }
   }
 
@@ -36,10 +42,22 @@ public class Conveyor extends SubsystemBase {
     }
   }
 
+  public void slowerUp() {
+    if (motorSpeedProportionUp > 0) {
+      motorSpeedProportionUp -= 0.05;
+    }
+  }
+
+  public Conveyor changeProportions(double[] newProportions) {
+    motorSpeedProportion = newProportions[0];
+    motorSpeedProportionUp = newProportions[1];
+    return this;
+  }
+
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Output Percentage", motorSpeedProportion);
+    SmartDashboard.putNumber("Percentage down", motorSpeedProportion);
+    SmartDashboard.putNumber("Percentage up", motorSpeedProportionUp);
   }
 
 }

@@ -5,9 +5,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.DrivetrainConstants.*;
 
@@ -21,17 +21,20 @@ public class Drivetrain extends SubsystemBase {
   private final MotorControllerGroup mRight = new MotorControllerGroup(mRightFront, mRightRear);
 
   private final DifferentialDrive mainDrive = new DifferentialDrive(mLeft, mRight);
-  
+
   public Drivetrain() {}
   
   public void Drive(double ySpeed, double xSpeed){
     mainDrive.arcadeDrive(xSpeed, ySpeed);
   }
+/*
+  public double getSonarValue() {
+    double rawValue = ultrasonic.getValue();
+    double voltage_scale_factor = 5/RobotController.getVoltage5V();
+    double currentDistanceInches = rawValue * voltage_scale_factor * 0.0492;
+    return currentDistanceInches;
+  }*/
 
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Left", mLeft.get());
-    SmartDashboard.putNumber("Right", mRight.get());
-  }
+  public void periodic() {}
 }
