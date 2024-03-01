@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Wing;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -23,7 +24,7 @@ import static frc.robot.Constants.ConveyorConstants.*;
  */
 public class RobotContainer {
   private final CommandXboxController mStick = new CommandXboxController(0);
-  private final Drivetrain s_drivetrain = new Drivetrain();
+  Drivetrain s_drivetrain = new Drivetrain();
   private final Conveyor s_conveyor = new Conveyor();
   private final Wing s_wing = new Wing();
   
@@ -31,8 +32,7 @@ public class RobotContainer {
   public RobotContainer() {
     s_conveyor.setDefaultCommand(new RunCommand(()->s_conveyor.beltMove(0.0), s_conveyor));
     s_wing.setDefaultCommand(new RunCommand(()->s_wing.pistonMove(0.0), s_wing));
-    s_drivetrain.setDefaultCommand(new RunCommand(()-> s_drivetrain.Drive(0, 0), s_drivetrain));
-    // s_drivetrain.setDefaultCommand(new RunCommand(()->s_drivetrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_drivetrain));
+    s_drivetrain.setDefaultCommand(new RunCommand(()->s_drivetrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_drivetrain));
     
     configureBindings();
   }
@@ -64,7 +64,8 @@ public class RobotContainer {
     mStick.a().onTrue(new RunCommand(()->s_wing.pistonMove(1.0), s_wing).withTimeout(3));
     mStick.b().onTrue(new RunCommand(()->s_wing.pistonMove(-1.0), s_wing).withTimeout(3));
     
-    mStick.start().and(mStick.button(7)).toggleOnTrue(new RunCommand(()->s_drivetrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_drivetrain));
+    mStick.start().whileTrue(new RunCommand(()-> s_drivetrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_drivetrain));
+    // mStick.start().and(mStick.button(7)).toggleOnTrue(new RunCommand(()->s_drivetrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_drivetrain));
   }
   
   /**
@@ -77,7 +78,16 @@ public class RobotContainer {
     return Commands.sequence(
       new RunCommand(() -> s_conveyor.changeProportions(kHighGrid).beltMove(1), s_conveyor).withTimeout(1.5),
       new InstantCommand(() -> s_conveyor.beltMove(0), s_conveyor),
-      new RunCommand(() -> s_drivetrain.Drive(0.6, 0), s_drivetrain).withTimeout(1.5)
+      new RunCommand(() -> s_drivetrain.Drive(0.6, 0), s_drivetrain).withTimeout(SmartDashboard.getNumber("AutoBackwardsTime", 4.25)),
+      new RunCommand(() -> s_drivetrain.Drive(-0.6, 0), s_drivetrain).withTimeout(SmartDashboard.getNumber("AutoFrontwardsTime", 2.0))
     );
   }
+  
+  // public Command getDisabledCommand() {
+  //   return Commands.sequence(
+  //     new InstantCommand(() -> s_conveyor.beltMove(0), s_conveyor),
+  //     new InstantCommand(() -> s_drivetrain.Drive(0, 0), s_drivetrain),
+  //     new InstantCommand(() -> s_wing.pistonMove(0), s_wing)
+  //   );
+  // }
 }

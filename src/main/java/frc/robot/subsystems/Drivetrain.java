@@ -20,20 +20,13 @@ public class Drivetrain extends SubsystemBase {
   private final MotorControllerGroup mLeft = new  MotorControllerGroup(mLeftFront, mLeftRear);
   private final MotorControllerGroup mRight = new MotorControllerGroup(mRightFront, mRightRear);
 
-  private final DifferentialDrive mainDrive = new DifferentialDrive(mLeft, mRight);
+  private DifferentialDrive mainDrive = new DifferentialDrive(mLeft, mRight);
 
   public Drivetrain() {}
   
   public void Drive(double ySpeed, double xSpeed){
     mainDrive.arcadeDrive(xSpeed, ySpeed);
   }
-/*
-  public double getSonarValue() {
-    double rawValue = ultrasonic.getValue();
-    double voltage_scale_factor = 5/RobotController.getVoltage5V();
-    double currentDistanceInches = rawValue * voltage_scale_factor * 0.0492;
-    return currentDistanceInches;
-  }*/
 
   @Override
   public void periodic() {}
