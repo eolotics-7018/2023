@@ -4,15 +4,17 @@
 
 package frc.robot;
 
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Conveyor;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.Train;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Wing;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import static frc.robot.Constants.ConveyorConstants.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -21,20 +23,18 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final CommandXboxController mStick = new CommandXboxController(Constants.OperatorConstants.KPControl);
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final Train s_DriveTrain = new Train();
-  private final Conveyor s_Conveyor = new Conveyor();
+  private final CommandXboxController mStick = new CommandXboxController(0);
+  Drivetrain s_drivetrain = new Drivetrain();
+  private final Conveyor s_conveyor = new Conveyor();
+  private final Wing s_wing = new Wing();
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the trigger bindings
-    configureBindings();
+    s_conveyor.setDefaultCommand(new RunCommand(()->s_conveyor.beltMove(0.0), s_conveyor));
+    s_wing.setDefaultCommand(new RunCommand(()->s_wing.pistonMove(0.0), s_wing));
+    s_drivetrain.setDefaultCommand(new RunCommand(()->s_drivetrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_drivetrain));
     
-    // s_DriveTrain.setDefaultCommand(new RunCommand(()->s_DriveTrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_DriveTrain));
-    s_Conveyor.setDefaultCommand(new RunCommand(()->s_Conveyor.beltMove(0.0), s_Conveyor));
-    s_DriveTrain.setDefaultCommand(new RunCommand(()-> s_DriveTrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_DriveTrain));
+    configureBindings();
   }
 
   /**
@@ -47,15 +47,25 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    // Controles de la banda/cañón
+    mStick.rightTrigger().whileTrue(new RunCommand(()-> s_conveyor.beltMove(mStick.getRightTriggerAxis()), s_conveyor));
+    mStick.leftTrigger().whileTrue(new RunCommand(()-> s_conveyor.beltMove(-mStick.getLeftTriggerAxis()), s_conveyor));
+    mStick.rightBumper().onTrue(new InstantCommand(() -> s_conveyor.changeProportions(kHighGrid), s_conveyor));
+    mStick.leftBumper().onTrue(new InstantCommand(() -> s_conveyor.changeProportions(kMiddleGrid), s_conveyor));
+    mStick.x().onTrue(new InstantCommand(()-> s_conveyor.changeProportions(kDownGrid), s_conveyor));
+    
+    // Controles de la velocidad de la banda/cañón
+    mStick.povRight().onTrue(new InstantCommand(()-> s_conveyor.faster(), s_conveyor));
+    mStick.povLeft().onTrue(new InstantCommand(()-> s_conveyor.slower(), s_conveyor));
+    mStick.povUp().onTrue(new InstantCommand(() -> s_conveyor.fasterUp(), s_conveyor));
+    mStick.povDown().onTrue(new InstantCommand(() -> s_conveyor.slowerUp(), s_conveyor));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-
-    // mStick.rightTrigger().onTrue(new RunCommand(()->s_Conveyor.beltMove(mStick.getRightTriggerAxis()), s_Conveyor));
-    mStick.leftTrigger().whileTrue(new RunCommand(()->s_Conveyor.beltMove(-mStick.getLeftTriggerAxis()), s_Conveyor));
+    // Controles del piston
+    mStick.a().onTrue(new RunCommand(()->s_wing.pistonMove(1.0), s_wing).withTimeout(3));
+    mStick.b().onTrue(new RunCommand(()->s_wing.pistonMove(-1.0), s_wing).withTimeout(3));
+    
+    mStick.start().whileTrue(new RunCommand(()-> s_drivetrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_drivetrain));
+    // mStick.start().and(mStick.button(7)).toggleOnTrue(new RunCommand(()->s_drivetrain.Drive(mStick.getLeftY(), mStick.getRightX()), s_drivetrain));
   }
   
   /**
@@ -65,6 +75,19 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return Commands.sequence(
+      new RunCommand(() -> s_conveyor.changeProportions(kHighGrid).beltMove(1), s_conveyor).withTimeout(1.5),
+      new InstantCommand(() -> s_conveyor.beltMove(0), s_conveyor),
+      new RunCommand(() -> s_drivetrain.Drive(0.6, 0), s_drivetrain).withTimeout(SmartDashboard.getNumber("AutoBackwardsTime", 4.25)),
+      new RunCommand(() -> s_drivetrain.Drive(-0.6, 0), s_drivetrain).withTimeout(SmartDashboard.getNumber("AutoFrontwardsTime", 2.0))
+    );
   }
+  
+  // public Command getDisabledCommand() {
+  //   return Commands.sequence(
+  //     new InstantCommand(() -> s_conveyor.beltMove(0), s_conveyor),
+  //     new InstantCommand(() -> s_drivetrain.Drive(0, 0), s_drivetrain),
+  //     new InstantCommand(() -> s_wing.pistonMove(0), s_wing)
+  //   );
+  // }
 }

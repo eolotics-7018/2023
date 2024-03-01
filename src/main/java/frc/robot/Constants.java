@@ -13,14 +13,22 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class OperatorConstants {
-   public final static int KPControl = 0;
-   public final static int kPMLF = 0;
-   public final static int kPMLR = 1;
-   public final static int kPMRF = 2;
-   public final static int kPMRR = 3;
-   //constantes de  la banda 
-   public final static int kPBelt = 4;
-
+  public static class DrivetrainConstants {
+    public final static int kPMotorLeftFront = 0; 
+    public final static int kPMotorRightFront = 1; 
+    public final static int kPMotorLeftRear = 2; 
+    public final static int kPMotorRightRear = 3; 
+  }
+  
+  public final static class ConveyorConstants {
+    public final static int kPBelt = 1;
+    public final static int kPBeltUp = 0;
+    public final static double[] kHighGrid = {0.9, 0.4};
+    public final static double[] kMiddleGrid = {0.8, 0.3};
+    public final static double[] kDownGrid = {0.5, 0};
+  }
+  
+  public final class Wing {
+    public final static int kPiston = 2;
   }
 }

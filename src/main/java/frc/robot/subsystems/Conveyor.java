@@ -4,22 +4,60 @@
 
 package frc.robot.subsystems;
 
-
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import static frc.robot.Constants.ConveyorConstants.*;
 
 public class Conveyor extends SubsystemBase {
-  /** Creates a new Conveyor. */
-  private final Spark mBelt = new Spark(Constants.OperatorConstants.kPBelt);
-  public Conveyor() {}
+  private final Spark mBelt = new Spark(kPBelt);
+  private final Spark mBeltUp = new Spark(kPBeltUp);
+
+  private double motorSpeedProportion = 1, motorSpeedProportionUp = 1;
+
+  public Conveyor() {
+    mBelt.setInverted(true);
+  }
+
+  public void beltMove(double speed){
+    mBelt.set(speed * motorSpeedProportion);
+    mBeltUp.set(speed * motorSpeedProportionUp);
+  }
+
+  public void faster() {
+    if (motorSpeedProportion < 1) {
+      motorSpeedProportion += 0.05;
+    }
+  }
+
+  public void fasterUp() {
+    if (motorSpeedProportionUp < 1) {
+      motorSpeedProportionUp += 0.05;
+    }
+  }
+
+  public void slower() {
+    if (motorSpeedProportion > 0) {
+      motorSpeedProportion -= 0.05;
+    }
+  }
+
+  public void slowerUp() {
+    if (motorSpeedProportionUp > 0) {
+      motorSpeedProportionUp -= 0.05;
+    }
+  }
+
+  public Conveyor changeProportions(double[] newProportions) {
+    motorSpeedProportion = newProportions[0];
+    motorSpeedProportionUp = newProportions[1];
+    return this;
+  }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-  }
-  public void beltMove(double beltSpeed){
-    mBelt.set(beltSpeed);
+    SmartDashboard.putNumber("Percentage down", motorSpeedProportion);
+    SmartDashboard.putNumber("Percentage up", motorSpeedProportionUp);
   }
 
 }
